@@ -1,10 +1,7 @@
-#include "print.h"
 #include "tree.h"
 #include <cstdio>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <iostream>
 #include <string>
 
 int main(int argc, char **argv)
@@ -13,8 +10,7 @@ int main(int argc, char **argv)
 
 	std::ifstream read(file);
 	std::string line;
-	std::vector<int> val;
-	std::vector<double> p, q;
+	std::vector<double> p, q, val;
 	double a, b;
 	int c;
 	
@@ -31,11 +27,9 @@ int main(int argc, char **argv)
 		val.push_back(c);
 	}
 
-	Tree *tree = new Tree(val, p, q, val.size()+1);
+	Tree *tree = new Tree(val, p, q);
 
-	print(tree);
-
-	std::cout << "\nfind: " << tree->find(15);
+	tree->print();
 
 	return 0;
 }

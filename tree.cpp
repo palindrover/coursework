@@ -1,18 +1,21 @@
 #include "tree.h"
 #include <cfloat>
 #include <vector>
+#include <queue>
+#include <iostream>
 
 using namespace std;
 
-Tree::Tree(vector<int> values, vector<double> p, vector<double> q, int n)
+Tree::Tree(vector<double> values, vector<double> p, vector<double> q)
 {
+	int n = values.size() + 1;
 	vector<vector<int>> r = bst(p, q, n);
 	root = values[r[0][n] - 2];
 	left = 0 == r[0][n] - 1 || r[0][r[0][n]-1] == 1 ? nullptr : new Tree(r, 0, r[0][n]-1, values);
 	right = r[0][n] == n || r[r[0][n]][n] == 1 ? nullptr : new Tree(r, r[0][n], n, values);
 }
 
-Tree::Tree(vector<vector<int>> r, int i, int j, vector<int> values)
+Tree::Tree(vector<vector<int>> r, int i, int j, vector<double> values)
 {
 	root = values[r[i][j]-2];
 	left = i == r[i][j] - 1 || r[i][r[i][j]-1] == 1 ? nullptr : new Tree(r, i, r[i][j] - 1, values);
@@ -75,7 +78,7 @@ int Tree::height(Tree *tree, int h)
 	return max(height(tree->left, h), height(tree->right, h))+1;
 }
 
-bool Tree::find(int val)
+bool Tree::find(double val)
 {
 	Tree *i = this;
 
@@ -86,4 +89,32 @@ bool Tree::find(int val)
 	}
 
 	return 0;
+}
+
+void Tree::print()
+{
+	queue<Tree*> q;
+	q.push(this);
+	int h = this->height();
+
+	for(int j = 0; j < h; j++)
+	{
+		for(int i = 0; i < 1 << j && !q.empty(); i++)
+		{
+			Tree *cur = q.front();
+			if(cur == nullptr)
+			{
+				cout << "* ";
+				q.pop();
+				q.push(nullptr);
+				q.push(nullptr);
+				continue;
+			}
+			cout << cur->root << ' ';
+			q.push(cur->left);
+			q.push(cur->right);
+			q.pop();
+		}
+		cout << '\n';
+	}
 }
