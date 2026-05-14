@@ -66,17 +66,12 @@ OBST<T>::OBST(std::vector<T> values, std::vector<double> p, std::vector<double> 
 {
 	int n = values.size();
 	std::vector<std::vector<int>> r = bst(p, q);
-	/*left = 0 == r[0][n] - 1 || r[0][r[0][n]-1] == 1 ? nullptr : new OBST(r, 0, r[0][n] - 1, values);
-	right = r[0][n] == n || r[r[0][n]][n] == 1 ? nullptr : new OBST(r, r[0][n], n, values);
-	*/
 
 	int root_index = r[0][n] - 1;
 	root = values[root_index];
 
 	if(root_index > 0) left = new OBST(r, 0, root_index, values);
 	if(root_index + 1 < n) right = new OBST(r, root_index + 1, n, values);
-
-	//*this = OBST(r, 0, n, values);
 }
 
 template <typename T>
@@ -91,9 +86,6 @@ OBST<T>::OBST(std::vector<std::vector<int>> r, int i, int j, std::vector<T> valu
 	int root_index = r[i][j] - 1;
 	root = values[root_index];
 
-/*	left = i == r[i][j] - 1 || r[i][r[i][j]-1] == 1 ? nullptr : new OBST(r, i, r[i][j] - 1, values);
-	right = r[i][j] == j || r[r[i][j]][j] == 1 ? nullptr : new OBST(r, r[i][j], j, values);
-*/
 	if(root_index > i) left = new OBST(r, i, root_index, values);
 	if(root_index + 1 < j) right = new OBST(r, root_index + 1, j, values);
 }
