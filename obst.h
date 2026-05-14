@@ -64,25 +64,44 @@ OBST<T>::OBST(std::string file)
 template <typename T>
 OBST<T>::OBST(std::vector<T> values, std::vector<double> p, std::vector<double> q)
 {
-	int n = values.size() + 1;
+	int n = values.size();
 	std::vector<std::vector<int>> r = bst(p, q);
-	root = values[r[0][n] - 2];
-	left = 0 == r[0][n] - 1 || r[0][r[0][n]-1] == 1 ? nullptr : new OBST(r, 0, r[0][n]-1, values);
+	/*left = 0 == r[0][n] - 1 || r[0][r[0][n]-1] == 1 ? nullptr : new OBST(r, 0, r[0][n] - 1, values);
 	right = r[0][n] == n || r[r[0][n]][n] == 1 ? nullptr : new OBST(r, r[0][n], n, values);
+	*/
+
+	int root_index = r[0][n] - 1;
+	root = values[root_index];
+
+	if(root_index > 0) left = new OBST(r, 0, root_index, values);
+	if(root_index + 1 < n) right = new OBST(r, root_index + 1, n, values);
+
+	//*this = OBST(r, 0, n, values);
 }
 
 template <typename T>
 OBST<T>::OBST(std::vector<std::vector<int>> r, int i, int j, std::vector<T> values)
 {
-	root = values[r[i][j]-2];
-	left = i == r[i][j] - 1 || r[i][r[i][j]-1] == 1 ? nullptr : new OBST(r, i, r[i][j] - 1, values);
+	if(i >= j || i < 0 || j > (int)values.size())
+	{
+		root = T{};
+		return;
+	}
+
+	int root_index = r[i][j] - 1;
+	root = values[root_index];
+
+/*	left = i == r[i][j] - 1 || r[i][r[i][j]-1] == 1 ? nullptr : new OBST(r, i, r[i][j] - 1, values);
 	right = r[i][j] == j || r[r[i][j]][j] == 1 ? nullptr : new OBST(r, r[i][j], j, values);
+*/
+	if(root_index > i) left = new OBST(r, i, root_index, values);
+	if(root_index + 1 < j) right = new OBST(r, root_index + 1, j, values);
 }
 
 template<typename T>
 std::vector<std::vector<int>> OBST<T>::bst(std::vector<double> p, std::vector<double> q)
 {
-	int n = q.size();
+	int n = p.size();
 	std::vector<std::vector<double>> c(n+1, std::vector<double>(n+1));
 	std::vector<std::vector<int>> r(n+1, std::vector<int>(n+1));
 	std::vector<std::vector<double>> w(n+1, std::vector<double>(n+1));
